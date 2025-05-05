@@ -1,4 +1,4 @@
-FROM golang:alpine as server_build
+FROM golang:alpine AS server_build
 
 # Add build deps
 RUN apk add --update gcc g++ git
