@@ -55,20 +55,21 @@ func main() {
 		}
 
 		// Override status to 503 and serve index
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 		if isJsonRequest(r){
 			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusServiceUnavailable)
 			content := Message{ Content: "We are currently under maintenance. Please try again after some moments"}
 			json.NewEncoder(w).Encode(content)
 		} else {
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			w.WriteHeader(http.StatusServiceUnavailable)
 			_, err := w.Write(index)
 
 			if err != nil {
 				log.Print("Failed to serve index.html")
 			}
 		}
-		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-		w.WriteHeader(http.StatusServiceUnavailable)
 	})
 
 	log.Print(fmt.Sprintf("Listening on %s...", port))
